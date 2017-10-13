@@ -31,7 +31,7 @@ public class TextEditor : GraphicEditor
 
         if (LanguageManager.instance == null) return;
 
-        List<string> key = new List<string>(LanguageManager.instance.resources.First(r => r.language == SystemLanguage.English).source.Keys);
+        List<string> key = new List<string>(LanguageManager.instance.resources[0].source.Keys);
 
         m_selectedKey = key.IndexOf(serializedObject.FindProperty("key").stringValue);
 

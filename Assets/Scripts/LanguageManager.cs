@@ -14,7 +14,20 @@ public class LanguageManager : MonoBehaviour
     public SystemLanguage currentLanguage;
     public LanguageResource[] resources;
 
-    private Dictionary<string, string> m_dictionary;
+    private Dictionary<string, string> m_dictionaryVar;
+    private Dictionary<string, string> m_dictionary {
+        get
+        {
+            if (m_dictionaryVar == null) {
+                LoadLanguage(s_instance.currentLanguage);
+            }
+            return m_dictionaryVar;
+        }
+        set
+        {
+            m_dictionaryVar = value;
+        }
+    }
 
     private static LanguageManager s_instance;
     public static LanguageManager instance
