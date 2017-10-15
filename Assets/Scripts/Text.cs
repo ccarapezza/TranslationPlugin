@@ -5,10 +5,12 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+
 namespace TranslationPlugin.UI
 {
     public class Text : UnityEngine.UI.Text
     {
+
         public string key;
 #if UNITY_EDITOR
         [MenuItem("GameObject/UI/TranslatableText", false)]

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 
 [ExecuteInEditMode]
-public class LanguageManager : MonoBehaviour
+public class LanguageManager : EditorWindow
 {
     private const string notFoundTextString = "Key not found in dictionary{0}";
 
@@ -53,13 +54,19 @@ public class LanguageManager : MonoBehaviour
         }
     }
 
-    // Use this for initialization
-    void Awake()
+    [MenuItem("PlugIn/Translation")]
+    public static void ShowWindows()
+    {
+        ((LanguageManager)GetWindow(typeof(LanguageManager))).Show();
+    }
+
+    void OnGUI()
     {
         if (s_instance != null)
         {
-            Destroy(this.gameObject);
-            return;
+            //Destroy(this.gameObject);
+            //Destroy(this);
+            //return;
         }
 
         if (Application.systemLanguage != SystemLanguage.Unknown)
@@ -71,14 +78,14 @@ public class LanguageManager : MonoBehaviour
         LoadLanguage(currentLanguage);
 
         if(Application.isPlaying)
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
 
     }
 
     public static void LoadLanguage(SystemLanguage lang)
     {
         int i = 0;
-
         LanguageResource[] rsc = s_instance.resources;
         for (i = 0; i < rsc.Length; i++)
         {
