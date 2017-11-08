@@ -36,7 +36,7 @@ namespace TranslationPlugin.UI
         {
             get
             {
-                m_Text = LanguageManager.GetText(key);
+                m_Text = LanguageCore.Instance.GetText(key);
                 return m_Text;
             }
         }

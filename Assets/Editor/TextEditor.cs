@@ -29,9 +29,9 @@ public class TextEditor : GraphicEditor
         titleStyle.font = EditorStyles.boldFont;
         EditorGUILayout.LabelField(new GUIContent("Translation"), titleStyle);
 
-        if (LanguageManager.instance == null) return;
+        if (LanguageCore.Instance == null) return;
 
-        List<string> key = new List<string>(LanguageManager.instance.resources[0].source.Keys);
+        List<string> key = new List<string>(LanguageCore.Instance.resources[0].source.Keys);
 
         m_selectedKey = key.IndexOf(serializedObject.FindProperty("key").stringValue);
 
