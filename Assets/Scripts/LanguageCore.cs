@@ -54,7 +54,7 @@ public class LanguageCore
                 }
                 instance.resources = lrs.ToArray();
                 //Debug.Log("Lenguajes: " + instance.resources.);
-                instance.LoadLanguage(SystemLanguage.Spanish);
+                instance.LoadLanguage(SystemLanguage.English);
             }
             return instance;
         }

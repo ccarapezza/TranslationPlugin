@@ -44,23 +44,19 @@ public class WriteCSV : MonoBehaviour
     {
         List<string> key = new List<string>(LanguageCore.Instance.resources[1].source.Keys);   
         string[] rowDataTemp = new string[2];
-        rowData.Clear();
         rowDataTemp[0] = "KEY;";
         rowDataTemp[1] = "TEXT;";
         rowData.Add(rowDataTemp);
 
         for (int j = 0; j < 3; j++)  
         {
-            lang = LanguageCore.Instance.resources[j].ToString();
-            var langResPos = lang.IndexOf("(LanguageResource)");
-            lang = lang.Remove(langResPos); 
-            lang = lang.Trim();
+            lang = LanguageCore.Instance.resources[j].language.ToString();
 
             if(lang.Contains(tempLang))
                 for (int i = 0; i < key.Count; i++)
                 {
                     string var = LanguageCore.Instance.GetText(key[i]);
-                    rowDataTemp = new string[3];
+                    rowDataTemp = new string[2];
                     rowDataTemp[0] = key[i] + ";";
                     rowDataTemp[1] = var + ";";
                     rowData.Add(rowDataTemp);
