@@ -30,7 +30,7 @@ public class LanguageCore
         }
     }
 
-    private static LanguageCore instance;
+    public static LanguageCore instance;
 
     private LanguageCore() { }
 
@@ -50,9 +50,10 @@ public class LanguageCore
                     string assetPath = "Assets" + langFile.Replace(Application.dataPath, "").Replace('\\', '/');
                     LanguageResource sourceLang = (LanguageResource)AssetDatabase.LoadAssetAtPath(assetPath, typeof(LanguageResource));
                     lrs.Add(sourceLang);
+                    //Debug.Log(sourceLang.master);
                 }
                 instance.resources = lrs.ToArray();
-                Debug.Log("Lenguajes: "+instance.resources.Length);
+                //Debug.Log("Lenguajes: " + instance.resources.);
                 instance.LoadLanguage(SystemLanguage.Spanish);
             }
             return instance;
@@ -61,7 +62,7 @@ public class LanguageCore
 
     public void LoadLanguage(SystemLanguage lang)
     {
-        Debug.Log("Load Language: " + lang);
+        //Debug.Log("Load Language: " + lang);
         for (int i = 0; i < instance.resources.Length; i++)
         {
             if (instance.resources[i].language == lang)
@@ -80,7 +81,6 @@ public class LanguageCore
     {
         if (!string.IsNullOrEmpty(key) && instance.m_dictionary.ContainsKey(key))
             return instance.m_dictionary[key];
-
         return string.Format(notFoundTextString, key);
     }
 }

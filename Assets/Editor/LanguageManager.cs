@@ -6,6 +6,9 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class LanguageManager : EditorWindow
 {
+    public SystemLanguage defaultLanguage = SystemLanguage.English;
+    public SystemLanguage currentLanguage;
+    public string vv;
 
     [MenuItem("Plugin/Translation")]
     public static void ShowWindows()
@@ -15,6 +18,12 @@ public class LanguageManager : EditorWindow
 
     void OnGUI()
     {
-        EditorGUILayout.LabelField("Object", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
+        if (Application.systemLanguage != SystemLanguage.Unknown)
+            currentLanguage = Application.systemLanguage;
+        else
+            currentLanguage = defaultLanguage;
+        //EditorGUILayout.EnumPopup("Current Language", defaultLanguage);
+
     }
 }

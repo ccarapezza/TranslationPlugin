@@ -34,13 +34,11 @@ public class TextEditor : GraphicEditor
         List<string> key = new List<string>(LanguageCore.Instance.resources[0].source.Keys);
 
         m_selectedKey = key.IndexOf(serializedObject.FindProperty("key").stringValue);
-
         EditorGUI.indentLevel++;
         m_selectedKey = EditorGUILayout.Popup("Translation key:", m_selectedKey, key.ToArray());
         if(m_selectedKey!=-1)
             serializedObject.FindProperty("key").stringValue = key[m_selectedKey];
         EditorGUI.indentLevel--;
-
         EditorGUILayout.PropertyField(m_FontData);
 
         base.AppearanceControlsGUI();
