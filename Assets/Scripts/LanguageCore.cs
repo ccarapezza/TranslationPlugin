@@ -30,7 +30,7 @@ public class LanguageCore
         }
     }
 
-    public static LanguageCore instance;
+    private static LanguageCore instance;
 
     private LanguageCore() { }
 

@@ -23,7 +23,18 @@ public class LanguageManager : EditorWindow
             currentLanguage = Application.systemLanguage;
         else
             currentLanguage = defaultLanguage;
-        //EditorGUILayout.EnumPopup("Current Language", defaultLanguage);
-
+        EditorGUILayout.EnumPopup("Current Language", currentLanguage);
+        EditorGUILayout.Space();
+        GUILayout.BeginVertical();
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.Space();
+        if(GUILayout.Button("⇓ I M P O R T ⇓", GUILayout.Width(95), GUILayout.Height(35)));
+                    {} // Import funct;
+        EditorGUILayout.Space();
+        if(GUILayout.Button("⇑ E X P O R T ⇑", GUILayout.Width(95), GUILayout.Height(35)));
+                    {} // Export funct;
+        EditorGUILayout.Space();
+        GUILayout.EndHorizontal();  
+        GUILayout.EndVertical();      
     }
 }
