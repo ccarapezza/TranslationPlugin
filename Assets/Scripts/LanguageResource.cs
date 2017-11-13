@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 [System.Serializable]
 public class Element
@@ -19,6 +20,8 @@ public class LanguageResource : ScriptableObject, ISerializationCallbackReceiver
 
     public void OnBeforeSerialize()
     {
+        master  = (LanguageResource)AssetDatabase.LoadAssetAtPath("Assets/Langs/English.asset", typeof(LanguageResource)); 
+
         elements.Clear();
         var keys = new List<string>(source.Keys);
 

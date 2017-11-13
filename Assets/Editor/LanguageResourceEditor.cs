@@ -68,6 +68,7 @@ public class LanguageResourceEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("master"), new GUIContent("Master Resource:"));
 
         m_masterLanguageResources = serializedObject.FindProperty("master").objectReferenceValue as LanguageResource;
+        /////////////// 
 
         if (m_masterLanguageResources != null)
         {
