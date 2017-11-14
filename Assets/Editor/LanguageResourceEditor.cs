@@ -179,7 +179,7 @@ public class LanguageResourceEditor : Editor
             for (index = 0; index < m_languageResources.arraySize; index++)
             {
                 var serializedProperty = m_languageResources.GetArrayElementAtIndex(index);
-
+                
                 if (!serializedProperty.FindPropertyRelative("key").stringValue.Contains(m_searchString))
                     continue;
 
@@ -197,6 +197,7 @@ public class LanguageResourceEditor : Editor
                                 serializedProperty.FindPropertyRelative("key").stringValue = m_newKey;
                             m_editKey = -1;
                             m_newKey = "";
+                            
                         }
                         var buttonStyle = new GUIStyle(GUI.skin.button);
                         buttonStyle.font = EditorStyles.boldFont;

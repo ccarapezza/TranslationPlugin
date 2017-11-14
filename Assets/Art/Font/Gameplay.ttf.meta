@@ -1,16 +1,17 @@
 fileFormatVersion: 2
-guid: debe8a50832fec8408b216ac64b774a7
-timeCreated: 18446744011573954816
+guid: fe90d7053e5e7b84c9fd931717a949a1
+timeCreated: 1510622276
+licenseType: Free
 TrueTypeFontImporter:
-  externalObjects: {}
   serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: 
-  fontNames: []
+  fontName: Gameplay
+  fontNames:
+  - Gameplay
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

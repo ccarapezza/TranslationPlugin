@@ -12,6 +12,8 @@ public class LanguageManager : EditorWindow
     public IFormattable defaultLanguage = SystemLanguage.English;
     public IFormattable currentLanguage;
     public int index;
+    public LanguageResource[] resources;
+
 
     private List<string[]> rowData = new List<string[]>();
     private string[][] output;
@@ -28,33 +30,36 @@ public class LanguageManager : EditorWindow
 
     void OnGUI()
     {
+        resources = LanguageCore.Instance.resources;
+        int indexAnt;
         EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
+        
         if (Application.systemLanguage != SystemLanguage.Unknown)
             currentLanguage = Application.systemLanguage;
         else
             currentLanguage = defaultLanguage;
-        string[] langs = new string[LanguageCore.Instance.resources.Length];
-        for (int i = 0; i < LanguageCore.Instance.resources.Length; i++)
-            langs[i] = LanguageCore.Instance.resources[i].language.ToString();
-        int ant = index;
-        index = EditorGUILayout.Popup(index, langs);
-        LanguageCore.Instance.LoadLanguage(LanguageCore.Instance.resources[index].language);
- 
-        if(ant != index)
-            AssetDatabase.Refresh();
+        indexAnt = index;
+        string[] langs = new string[resources.Length];
+        for (int i = 0; i < resources.Length; i++)
+            langs[i] = resources[i].language.ToString();
 
+        index = EditorGUILayout.Popup(index, langs);
+        LanguageCore.Instance.LoadLanguage(resources[index].language);
+        var tempLang = resources[index].language.ToString();
+        if (index != indexAnt)
+            SearchLang(tempLang);
         EditorGUILayout.Space();
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
         EditorGUILayout.Space();
 
-        if(GUILayout.Button("▼ I M P O R T ▼", GUILayout.Width(105), GUILayout.Height(35)))
-                    {} // Import funct;
+        if (GUILayout.Button("▼IMPORT▼", GUILayout.Width(105), GUILayout.Height(35)))
+            //ImportLang();
         EditorGUILayout.Space();
-        if(GUILayout.Button("▲  E X P O R T ▲ ", GUILayout.Width(105), GUILayout.Height(35)))
-            Save(LanguageCore.Instance.resources[index].language);
-
-        if(GUILayout.Button("S A V E   A L L ", GUILayout.Width(105), GUILayout.Height(35)))
+        if(GUILayout.Button("▲EXPORT▲ ", GUILayout.Width(105), GUILayout.Height(35)))
+            SearchLang(tempLang);
+        EditorGUILayout.Space();
+        if (GUILayout.Button("SAVE ALL", GUILayout.Width(105), GUILayout.Height(35)))
             SaveAll();
 
         EditorGUILayout.Space();
@@ -62,27 +67,34 @@ public class LanguageManager : EditorWindow
         GUILayout.EndVertical();      
     }
 
+    private void ImportLang() 
+    {
+        string path = "Assets/StreamingAssets/English.csv";
+        StreamReader reader = new StreamReader(path);
+        StreamWriter writer = new StreamWriter(path);
+        reader.Close();
+        List<string> key = new List<string>(resources[1].source.Keys);
+        for (int i = 0; i < resources[1].source.Keys.Count; i++)
+        {
+            //Debug.Log(LanguageCore.Instance.GetText(key[i]));
+            writer.Write(LanguageCore.Instance.GetText(key[i]));
+        }
+        writer.Close();
+    }
     private void SaveAll()
     {
-        longt = LanguageCore.Instance.resources.Length;
+        longt = resources.Length;
         for(int i = 0; i < longt; i++)
         {
-            SystemLanguage tempLang = LanguageCore.Instance.resources[i].language;
+            SystemLanguage tempLang = resources[i].language;
             LanguageCore.Instance.LoadLanguage(tempLang);
             SearchLang(tempLang.ToString());
-            rowData.Clear();
         }
-    }
-
-    private void Save(SystemLanguage lang)
-    {
-        SearchLang(lang.ToString());
-        rowData.Clear();
     }
 
     private void SearchLang(string tempLang)
     {
-        List<string> key = new List<string>(LanguageCore.Instance.resources[1].source.Keys);   
+        List<string> key = new List<string>(resources[1].source.Keys);   
         string[] rowDataTemp = new string[2];
         rowDataTemp[0] = "KEY;";
         rowDataTemp[1] = "TEXT;";
@@ -90,9 +102,10 @@ public class LanguageManager : EditorWindow
 
         for (int j = 0; j < longt; j++)  
         {
-            lang = LanguageCore.Instance.resources[j].language.ToString();
+            lang = resources[j].language.ToString();
 
             if(lang.Contains(tempLang))
+            {
                 for (int i = 0; i < key.Count; i++)
                 {
                     string var = LanguageCore.Instance.GetText(key[i]);
@@ -100,9 +113,11 @@ public class LanguageManager : EditorWindow
                     rowDataTemp[0] = key[i] + ";";
                     rowDataTemp[1] = var + ";";
                     rowData.Add(rowDataTemp);
-                    StreamValues();  
+                    StreamValues();
                 }
+            }
         }
+        rowData.Clear();
     }
 
     private void StreamValues()
@@ -124,11 +139,11 @@ public class LanguageManager : EditorWindow
         outStream.WriteLine(title);
         outStream.WriteLine(sb);
         outStream.Close();
-        AssetDatabase.Refresh();
     }
 
     public string getPath()
     {
+        AssetDatabase.Refresh();
         return Application.dataPath +"/StreamingAssets/" + lang + ".csv";
     }
 }
