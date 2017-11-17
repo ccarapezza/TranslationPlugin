@@ -1,7 +1,7 @@
 LANGUAGE;CATALAN;
 KEY;TEXT;
-A;A_CAT;
-B;B_CAT;
-C;C_CAT;
-D;D_CAT;
+PLAY;Comencar;
+CONTROLS;Controls;
+OPTIONS;Options;
+TITLE;JOC;
 

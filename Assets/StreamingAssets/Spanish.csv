@@ -1,7 +1,7 @@
 LANGUAGE;SPANISH;
 KEY;TEXT;
-A;Empezar;
-B;Controles;
-C;Opciones;
-D;JUEGO;
+PLAY;Jugar;
+CONTROLS;Controles;
+OPTIONS;Opciones;
+TITLE;JUEGO;
 

@@ -1,7 +1,7 @@
 LANGUAGE;ENGLISH;
 KEY;TEXT;
-A;Play;
-B;Controls;
-C;Options;
-D;GAME;
+PLAY;Play;
+CONTROLS;Controls;
+OPTIONS;Options;
+TITLE;GAME;
 

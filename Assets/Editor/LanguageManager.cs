@@ -12,15 +12,15 @@ public class LanguageManager : EditorWindow
     public IFormattable defaultLanguage = SystemLanguage.English;
     public IFormattable currentLanguage;
     public int index;
-    public LanguageResource[] resources;
-
+    public LanguageResource[] resources; 
 
     private List<string[]> rowData = new List<string[]>();
     private string[][] output;
-    private string title;
+    private string titled;
     private int length;
     static private string lang;
     private int longt;
+    private string tempPath;
 
     [MenuItem("Plugin/Translation")]
     public static void ShowWindows()
@@ -28,12 +28,16 @@ public class LanguageManager : EditorWindow
         ((LanguageManager)GetWindow(typeof(LanguageManager))).Show();
     }
 
-    void OnGUI()
+    void OnEnable()
     {
         resources = LanguageCore.Instance.resources;
+        SaveAll();
+    }
+
+    void OnGUI()
+    {    
         int indexAnt;
         EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
-        
         if (Application.systemLanguage != SystemLanguage.Unknown)
             currentLanguage = Application.systemLanguage;
         else
@@ -53,38 +57,76 @@ public class LanguageManager : EditorWindow
         GUILayout.BeginHorizontal();
         EditorGUILayout.Space();
 
+        if (GUILayout.Button("OPEN", GUILayout.Width(105), GUILayout.Height(35)))
+            tempPath = FindPath();
         if (GUILayout.Button("▼IMPORT▼", GUILayout.Width(105), GUILayout.Height(35)))
-            //ImportLang();
+        {
+            int count = 0;  
+            string tempVar = GetImportPath(tempPath);
+            for (int i = 0; i < resources.Length; i++)
+            {  
+                langs[i] = resources[i].language.ToString();
+                if (langs[i].Contains(tempVar))
+                {
+                    count++;
+                    if (EditorUtility.DisplayDialog("The language already exists", "Do you want to overwrite the data?", "Yes", "No"))
+                    {
+                        FileUtil.DeleteFileOrDirectory("Assets/Langs/" + tempVar + ".asset");
+                        AssetDatabase.Refresh();
+                        ImportLang(tempPath);
+                    }
+                }
+            }
+            if(count == 0)
+                ImportLang(tempPath);
+
+            //Falta que inserte los datos del csv en las keys correspondientes
+        }
+
         EditorGUILayout.Space();
-        if(GUILayout.Button("▲EXPORT▲ ", GUILayout.Width(105), GUILayout.Height(35)))
+        if (GUILayout.Button("▲EXPORT▲ ", GUILayout.Width(105), GUILayout.Height(35)))
             SearchLang(tempLang);
-        EditorGUILayout.Space();
         if (GUILayout.Button("SAVE ALL", GUILayout.Width(105), GUILayout.Height(35)))
             SaveAll();
 
         EditorGUILayout.Space();
-        GUILayout.EndHorizontal();  
-        GUILayout.EndVertical();      
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
     }
 
-    private void ImportLang() 
+    public string FindPath()
     {
-        string path = "Assets/StreamingAssets/English.csv";
-        StreamReader reader = new StreamReader(path);
-        StreamWriter writer = new StreamWriter(path);
-        reader.Close();
-        List<string> key = new List<string>(resources[1].source.Keys);
-        for (int i = 0; i < resources[1].source.Keys.Count; i++)
-        {
-            //Debug.Log(LanguageCore.Instance.GetText(key[i]));
-            writer.Write(LanguageCore.Instance.GetText(key[i]));
-        }
-        writer.Close();
+        return EditorUtility.OpenFilePanel("Overwrite with csv", "Assets/StreammingAssets", "csv");
     }
+
+    private string ImportLang(string langName)
+    {
+        LanguageResource asset = CreateInstance<LanguageResource>();
+        string path = "Assets/Langs";
+        langName = GetImportPath(langName);
+        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/" + langName + ".asset");
+        AssetDatabase.CreateAsset(asset, assetPathAndName);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = asset;
+        AssetDatabase.Refresh();
+        return langName;
+    }
+
+    private string GetImportPath(string langName)
+    {
+        langName = Path.GetFileName(langName);
+        var langResPos = langName.IndexOf(".csv");
+        langName = langName.Remove(langResPos);
+        langName = langName.Trim();
+        return langName;
+    }
+
     private void SaveAll()
     {
         longt = resources.Length;
-        for(int i = 0; i < longt; i++)
+        for (int i = 0; i < longt; i++)
         {
             SystemLanguage tempLang = resources[i].language;
             LanguageCore.Instance.LoadLanguage(tempLang);
@@ -94,17 +136,17 @@ public class LanguageManager : EditorWindow
 
     private void SearchLang(string tempLang)
     {
-        List<string> key = new List<string>(resources[1].source.Keys);   
+        List<string> key = new List<string>(resources[1].source.Keys);
         string[] rowDataTemp = new string[2];
         rowDataTemp[0] = "KEY;";
         rowDataTemp[1] = "TEXT;";
         rowData.Add(rowDataTemp);
 
-        for (int j = 0; j < longt; j++)  
+        for (int j = 0; j < longt; j++)
         {
             lang = resources[j].language.ToString();
 
-            if(lang.Contains(tempLang))
+            if (lang.Contains(tempLang))
             {
                 for (int i = 0; i < key.Count; i++)
                 {
@@ -122,28 +164,34 @@ public class LanguageManager : EditorWindow
 
     private void StreamValues()
     {
-        title = "LANGUAGE" + ";" + lang.ToUpper() + ";";
-        output = new string[rowData.Count][];
+        for (int i = 0; i < resources.Length; i++)
+        {
+            if(resources[i].language.ToString().Contains(lang))
+            {
+                titled = "LANGUAGE" + ";" + lang.ToUpper() + ";";
+                output = new string[rowData.Count][];
 
-        for (int i = 0; i < output.Length; i++)
-            output[i] = rowData[i];
+                for (int j = 0; j < output.Length; j++)
+                    output[j] = rowData[j];
 
-        length = output.GetLength(0);
-        StringBuilder sb = new StringBuilder();
+                length = output.GetLength(0);
+                StringBuilder sb = new StringBuilder();
 
-        for (int index = 0; index < length; index++)
-            sb.AppendLine(string.Join("", output[index]));
+                for (int index = 0; index < length; index++)
+                    sb.AppendLine(string.Join("", output[index]));
 
-        string filePath = getPath(); 
-        StreamWriter outStream = System.IO.File.CreateText(filePath);
-        outStream.WriteLine(title);
-        outStream.WriteLine(sb);
-        outStream.Close();
+                string filePath = getPath();
+                StreamWriter outStream = System.IO.File.CreateText(filePath);
+                outStream.WriteLine(titled);
+                outStream.WriteLine(sb);
+                outStream.Close();
+            }
+        }
     }
 
     public string getPath()
     {
         AssetDatabase.Refresh();
-        return Application.dataPath +"/StreamingAssets/" + lang + ".csv";
+        return Application.dataPath + "/StreamingAssets/" + lang + ".csv";
     }
 }

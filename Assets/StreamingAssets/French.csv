@@ -1,7 +1,7 @@
 LANGUAGE;FRENCH;
 KEY;TEXT;
-A;A_FRE;
-B;B_FRE;
-C;C_FRE;
-D;D_FRE;
+PLAY;Key not found in dictionaryPLAY;
+CONTROLS;Key not found in dictionaryCONTROLS;
+OPTIONS;Key not found in dictionaryOPTIONS;
+TITLE;Key not found in dictionaryTITLE;
 

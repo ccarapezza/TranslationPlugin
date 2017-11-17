@@ -21,7 +21,7 @@ public class LanguageCore
             /*if (m_dictionaryVar == null)
             {
                 LoadLanguage(instance.currentLanguage);
-            }*/
+            }*/ 
             return m_dictionaryVar;
         }
         set

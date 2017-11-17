@@ -54,8 +54,8 @@ public class LanguageResourceEditor : Editor
         TranslationList();
 
         serializedObject.ApplyModifiedProperties();
-    }
 
+    }
 
     private void CalculateResourcesInfo()
     {
@@ -279,7 +279,7 @@ public class LanguageResourceEditor : Editor
         }
     }
 
-    private void MergeFromMaster()
+    public void MergeFromMaster()
     {
         if (EditorUtility.DisplayDialog("Confirm merge from master", string.Format("Are you sure you want to add {0} missings keys to current resource?", m_missingKeys.Count), "Yes", "No"))
         {
