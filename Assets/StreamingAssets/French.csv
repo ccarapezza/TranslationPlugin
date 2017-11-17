@@ -1,7 +1,7 @@
 LANGUAGE;FRENCH;
 KEY;TEXT;
-PLAY;Key not found in dictionaryPLAY;
-CONTROLS;Key not found in dictionaryCONTROLS;
-OPTIONS;Key not found in dictionaryOPTIONS;
-TITLE;Key not found in dictionaryTITLE;
+PLAY;Debut;
+CONTROLS;Controles;
+OPTIONS;Options;
+TITLE;JOUER;
 
