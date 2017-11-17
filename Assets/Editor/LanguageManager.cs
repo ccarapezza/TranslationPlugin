@@ -39,6 +39,7 @@ public class LanguageManager : EditorWindow
 
         EditorGUILayout.LabelField("Languages", EditorStyles.boldLabel);
 
+        LanguageCore.Instance.ReloadLangResAssets();
         string[] langs = new string[LanguageCore.Instance.resources.Length];
         for (int i = 0; i < LanguageCore.Instance.resources.Length; i++)
             langs[i] = LanguageCore.Instance.resources[i].language.ToString();

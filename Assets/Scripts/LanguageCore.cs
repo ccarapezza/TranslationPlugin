@@ -41,19 +41,7 @@ public class LanguageCore
             if (instance == null)
             {
                 instance = new LanguageCore();
-                List<LanguageResource> lrs = new List<LanguageResource>();
-                //Se carga el diccionario
-                //TODO: Modificar la manera de traer los LanguageResources por AssetDatabase
-                string[] langFiles = Directory.GetFiles(Application.dataPath, "*.asset", SearchOption.AllDirectories);
-                foreach (string langFile in langFiles)
-                {
-                    string assetPath = "Assets" + langFile.Replace(Application.dataPath, "").Replace('\\', '/');
-                    LanguageResource sourceLang = (LanguageResource)AssetDatabase.LoadAssetAtPath(assetPath, typeof(LanguageResource));
-                    lrs.Add(sourceLang);
-                    //Debug.Log(sourceLang.master);
-                }
-                instance.resources = lrs.ToArray();
-                //Debug.Log("Lenguajes: " + instance.resources.);
+                instance.ReloadLangResAssets();
                 instance.LoadLanguage(SystemLanguage.English);
             }
             return instance;
@@ -75,6 +63,22 @@ public class LanguageCore
 
         if (onReload != null)
             onReload();
+    }
+
+    public void ReloadLangResAssets()
+    {
+        List<LanguageResource> lrs = new List<LanguageResource>();
+        //Se carga el diccionario
+        //TODO: Modificar la manera de traer los LanguageResources por AssetDatabase
+        string[] langFiles = Directory.GetFiles(Application.dataPath, "*.asset", SearchOption.AllDirectories);
+        foreach (string langFile in langFiles)
+        {
+            string assetPath = "Assets" + langFile.Replace(Application.dataPath, "").Replace('\\', '/');
+            LanguageResource sourceLang = (LanguageResource)AssetDatabase.LoadAssetAtPath(assetPath, typeof(LanguageResource));
+            lrs.Add(sourceLang);
+            //Debug.Log(sourceLang.master);
+        }
+        instance.resources = lrs.ToArray();
     }
 
     public string GetText(string key)
