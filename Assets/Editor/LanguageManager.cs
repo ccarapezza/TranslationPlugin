@@ -36,9 +36,9 @@ public class LanguageManager : EditorWindow
 
     void OnEnable()
     {
-        csvPath = "Assets/StreamingAssets/English.csv";
-        SaveAll();
+
     }
+
     void OnInspectorUpdate()
     {
         Repaint();
@@ -56,6 +56,9 @@ public class LanguageManager : EditorWindow
         var buttonStyle = new GUIStyle(GUI.skin.button);
         buttonStyle.fontSize = 18;
         buttonStyle.font = fuente;
+        var button2Style = new GUIStyle(GUI.skin.button);
+        button2Style.fontSize = 8;
+        button2Style.font = fuente;
 
         fuente = (Font)AssetDatabase.LoadAssetAtPath("Assets/Art/Font/Gameplay.ttf", typeof(Font));
 
@@ -114,46 +117,44 @@ public class LanguageManager : EditorWindow
         EditorGUILayout.Space();
         GUILayout.EndHorizontal();
         GUILayoutUtility.GetRect(10, 500, 110, 80);
+
+
         EditorGUILayout.Space();
         GUILayout.BeginHorizontal();
+        EditorGUILayout.HelpBox("Select a file to import", MessageType.None);
+        EditorGUILayout.TextField("CSV File: ", csvPath);
+        if (GUILayout.Button("O P E N", button2Style, GUILayout.Width(50)))
+            csvPath = EditorUtility.OpenFilePanel("Overwrite with csv", "Assets/StreammingAssets", "csv");
+        GUILayout.EndHorizontal();
+        GUI.enabled = csvPath != null && csvPath != "";
         EditorGUILayout.Space();
+        if (GUILayout.Button("I M P O R T", buttonStyle, GUILayout.Height(75)))
+        {
+            var reader = new StreamReader(csvPath);
+            string langLine = reader.ReadLine();
+            string csvLang = langLine.Split(';')[1];
 
-        if (GUILayout.Button("O P E N", buttonStyle, GUILayout.Width(150), GUILayout.Height(75)))
-            csvPath = EditorUtility.OpenFilePanel("Overwrite with csv", "Assets/StreammingAssets", "csv");           
-
-        if (GUILayout.Button("I M P O R T", buttonStyle, GUILayout.Width(150), GUILayout.Height(75)))
+            SystemLanguage csvCurrentLang = (SystemLanguage)Enum.Parse(typeof(SystemLanguage), csvLang, true);
+            bool isExist = false;
+            for (int i = 0; i < LanguageCore.Instance.resources.Length; i++)
             {
-                var reader = new StreamReader(csvPath);
-                string langLine = reader.ReadLine();
-                string csvLang = langLine.Split(';')[1];
-
-                SystemLanguage csvCurrentLang = (SystemLanguage)Enum.Parse(typeof(SystemLanguage), csvLang, true);
-                bool isExist = false;
-                for (int i = 0; i < LanguageCore.Instance.resources.Length; i++)
+                if (LanguageCore.Instance.resources[i].language == csvCurrentLang)
+                    isExist = true;
+            }
+            if (isExist)
+            {
+                if (EditorUtility.DisplayDialog("The language already exists", "Do you want to overwrite the data?", "Yes", "No"))
                 {
-                    if (LanguageCore.Instance.resources[i].language == csvCurrentLang)
-                        isExist = true;
-                }
-                if (isExist)
-                {
-                    if (EditorUtility.DisplayDialog("The language already exists", "Do you want to overwrite the data?", "Yes", "No"))
-                    {
-                        FileUtil.DeleteFileOrDirectory("Assets/Langs/" + GetImportPath(csvPath) + ".asset");
-                        AssetDatabase.Refresh();
-                        ImportLang(csvPath, reader, csvCurrentLang);
-                    }
-                }
-                else
-                {
+                    FileUtil.DeleteFileOrDirectory("Assets/Langs/" + GetImportPath(csvPath) + ".asset");
+                    AssetDatabase.Refresh();
                     ImportLang(csvPath, reader, csvCurrentLang);
                 }
             }
-        EditorGUILayout.Space();
-        GUILayout.EndHorizontal();
-
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Path: ", csvPath, EditorStyles.miniLabel);
-        EditorGUILayout.LabelField("Selected: ", GetImportPath(csvPath));
+            else
+            {
+                ImportLang(csvPath, reader, csvCurrentLang);
+            }
+        }
     }
 
     private string ImportLang(string langName, StreamReader reader, SystemLanguage lang)
