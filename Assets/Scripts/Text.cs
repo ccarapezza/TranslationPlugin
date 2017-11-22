@@ -11,19 +11,33 @@ namespace TranslationPlugin.UI
     public class Text : UnityEngine.UI.Text
     {
         public string key;
+
 #if UNITY_EDITOR
         [MenuItem("GameObject/UI/TranslatableText", false)]
         public static void CreateTranslatableText(MenuCommand menuCommand)
         {
             Canvas canvas = FindObjectOfType<Canvas>();
-
+            
             GameObject parentGo = new GameObject("TranslationPlugin.Text");
             parentGo.layer = LayerMask.NameToLayer("UI");
-            parentGo.transform.parent = canvas.transform;
+            if (menuCommand.context != null)
+                parentGo.transform.parent = ((GameObject)menuCommand.context).transform;
+            else
+                parentGo.transform.parent = canvas.transform;
+
             Text textComponent = parentGo.AddComponent<Text>();
             // Register the creation in the undo system
             Undo.RegisterCreatedObjectUndo(textComponent, "Create " + textComponent.name);
             Selection.activeObject = textComponent;
+
+            string keyName = "";
+            Transform root = parentGo.transform;
+            while (root!=null) {
+                keyName = root.name + keyName;
+                root = root.transform.parent;
+            }
+
+            textComponent.key = keyName;
         }
 #endif
 
