@@ -60,14 +60,18 @@ public class LanguageManager : EditorWindow
         button2Style.fontSize = 8;
         button2Style.font = fuente;
 
+        var title = new GUIStyle(GUI.skin.label);
+        title.fontSize = 12;
+
         fuente = (Font)AssetDatabase.LoadAssetAtPath("Assets/Art/Font/Gameplay.ttf", typeof(Font));
 
         GUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Languages", titleLabelStyle);
         GUILayout.EndHorizontal();
 
-        GUI.Box(new Rect(0, 0, Screen.width, Screen.height / 2), "");
-        GUI.Box(new Rect(0, Screen.height/2, Screen.width, Screen.height / 2), "");
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        GUILayout.Box("", GUILayout.Height(1), GUILayout.Width(this.maxSize.x));
 
         EditorGUILayout.Space();
 
@@ -116,12 +120,10 @@ public class LanguageManager : EditorWindow
 
         EditorGUILayout.Space();
         GUILayout.EndHorizontal();
-        GUILayoutUtility.GetRect(10, 500, 110, 80);
 
-
+        EditorGUILayout.LabelField("Import", title);
         EditorGUILayout.Space();
         GUILayout.BeginHorizontal();
-        EditorGUILayout.HelpBox("Select a file to import", MessageType.None);
         EditorGUILayout.TextField("CSV File: ", csvPath);
         if (GUILayout.Button("O P E N", button2Style, GUILayout.Width(50)))
             csvPath = EditorUtility.OpenFilePanel("Overwrite with csv", "Assets/StreammingAssets", "csv");
