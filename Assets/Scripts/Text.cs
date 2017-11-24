@@ -30,19 +30,26 @@ namespace TranslationPlugin.UI
             Undo.RegisterCreatedObjectUndo(textComponent, "Create " + textComponent.name);
             Selection.activeObject = textComponent;
 
+            textComponent.key = textComponent.GenerateKey();
+            LanguageCore.Instance.AddKeyToAllLanguages(textComponent.key);
+        }
+#endif
+
+        private string GenerateKey()
+        {
             string keyName = "";
-            Transform root = parentGo.transform;
-            while (root!=null) {
+            Transform root = transform;
+            while (root != null)
+            {
                 if (keyName == "")
                     keyName = root.name;
                 else
                     keyName = root.name + "." + keyName;
                 root = root.transform.parent;
             }
-            LanguageCore.Instance.AddKeyToAllLanguages(keyName);
-            textComponent.key = keyName;
+
+            return keyName;
         }
-#endif
 
         public override string text
         {
@@ -62,6 +69,16 @@ namespace TranslationPlugin.UI
             Debug.Log("Delete keys: " + key);
             LanguageCore.Instance.RemoveKeyToAllLanguages(key);
             base.OnDestroy();
+        }
+
+        private void Update()
+        {
+            if (key != GenerateKey())
+            {
+                LanguageCore.Instance.ReplaceKeyInAllLanguages(GenerateKey(), key);
+                key = GenerateKey();
+                Debug.Log("change");
+            }
         }
     }
 }

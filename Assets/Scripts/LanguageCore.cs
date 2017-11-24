@@ -93,6 +93,20 @@ public class LanguageCore
         }
     }
 
+    public void ReplaceKeyInAllLanguages(string newKey, string oldKey)
+    {
+        ReloadLangResAssets();
+        foreach (LanguageResource langRes in instance.resources)
+        {
+            string value = langRes.source[oldKey];
+            if (value != null)
+            {
+                langRes.source.Remove(oldKey);
+                langRes.source.Add(newKey, value);
+            }
+        }
+    }
+
     public void RemoveKeyToAllLanguages(string key)
     {
         ReloadLangResAssets();
