@@ -49,7 +49,7 @@ public class LanguageResource : ScriptableObject, ISerializationCallbackReceiver
         int i;
         for (i = 0; i < newKeys.Count; i++)
         {
-            source.Add(newKeys[i], newKeys[i]);
+            source.Add(newKeys[i], "???"+newKeys[i]);
         }
     }
 }

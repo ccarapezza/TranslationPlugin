@@ -33,10 +33,13 @@ namespace TranslationPlugin.UI
             string keyName = "";
             Transform root = parentGo.transform;
             while (root!=null) {
-                keyName = root.name + keyName;
+                if (keyName == "")
+                    keyName = root.name;
+                else
+                    keyName = root.name + "." + keyName;
                 root = root.transform.parent;
             }
-
+            LanguageCore.Instance.AddKeyToAllLanguages(keyName);
             textComponent.key = keyName;
         }
 #endif
@@ -48,6 +51,17 @@ namespace TranslationPlugin.UI
                 m_Text = LanguageCore.Instance.GetText(key);
                 return m_Text;
             }
+        }
+
+        public void Reload()
+        {
+            UpdateGeometry();
+        }
+
+        protected override void OnDestroy() {
+            Debug.Log("Delete keys: " + key);
+            LanguageCore.Instance.RemoveKeyToAllLanguages(key);
+            base.OnDestroy();
         }
     }
 }

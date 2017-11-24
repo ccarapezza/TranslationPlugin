@@ -50,35 +50,56 @@ public class LanguageCore
 
     public void LoadLanguage(SystemLanguage lang)
     {
-        //Debug.Log("Load Language: " + lang);
         for (int i = 0; i < instance.resources.Length; i++)
         {
             if (instance.resources[i].language == lang)
             {
+                EditorPrefs.SetInt("currentLanguage", i);
                 instance.currentLanguage = lang;
                 instance.m_dictionary = instance.resources[i].source;
                 break;
             }
         }
-
-        if (onReload != null)
-            onReload();
+        TranslationPlugin.UI.Text[] translatableTexts = GameObject.FindObjectsOfType<TranslationPlugin.UI.Text>();
+        foreach (var translatableText in translatableTexts)
+        {
+            if (translatableText.enabled)
+            {
+                translatableText.enabled = false;
+                translatableText.enabled = true;
+            }
+        }
     }
 
     public void ReloadLangResAssets()
     {
         List<LanguageResource> lrs = new List<LanguageResource>();
         //Se carga el diccionario
-        //TODO: Modificar la manera de traer los LanguageResources por AssetDatabase
         string[] langFiles = Directory.GetFiles(Application.dataPath, "*.asset", SearchOption.AllDirectories);
         foreach (string langFile in langFiles)
         {
             string assetPath = "Assets" + langFile.Replace(Application.dataPath, "").Replace('\\', '/');
             LanguageResource sourceLang = (LanguageResource)AssetDatabase.LoadAssetAtPath(assetPath, typeof(LanguageResource));
             lrs.Add(sourceLang);
-            //Debug.Log(sourceLang.master);
         }
         instance.resources = lrs.ToArray();
+    }
+
+    public void AddKeyToAllLanguages(string key) {
+        ReloadLangResAssets();
+        foreach (LanguageResource langRes in instance.resources)
+        {
+            langRes.AddNewKeys(new List<string>(new string[1] { key }));
+        }
+    }
+
+    public void RemoveKeyToAllLanguages(string key)
+    {
+        ReloadLangResAssets();
+        foreach (LanguageResource langRes in instance.resources)
+        {
+            langRes.source.Remove(key);
+        }
     }
 
     public string GetText(string key)
